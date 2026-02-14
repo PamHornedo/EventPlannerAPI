@@ -36,3 +36,5 @@ process.on("SIGINT", async () => {
   await closeDB();
   process.exit(0);
 });
+
+export default app;
