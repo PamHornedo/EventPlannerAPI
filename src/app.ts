@@ -1,64 +1,38 @@
-import express from "express";
+import express, { Application } from "express";
 import { connectDB, closeDB } from "./config/db";
 import eventRoutes from "./routes/eventRoutes";
 
-const app = express();
+const app = (Application = express());
 
-// ============================================
-// MIDDLEWARE
-// ============================================
-
-// Parse JSON request bodies
 app.use(express.json());
-
-// ============================================
-// DATABASE CONNECTION
-// ============================================
 
 connectDB();
 
-// ============================================
-// ROUTES
-// ============================================
-
-// Root route - API information
 app.get("/", (req, res) => {
   res.json({
-    message: "Mongoose CRUD Operations API",
-    database: "Hackhaven",
+    message: "Event Planner API",
+    database: "EventPlanner",
     version: "1.0.0",
     endpoints: {
-      "POST /posts": "Create a new post",
-      "GET /posts": "Get all posts",
-      "GET /posts/:id": "Get a post by ID",
-      "PUT /posts/:id": "Update a post by ID",
-      "DELETE /posts/:id": "Delete a post by ID",
-      "GET /posts/filter/published": "Get published posts",
-      "GET /posts/author/:author": "Get posts by author",
-      "GET /posts/tag/:tag": "Get posts by tag",
+      "POST api/events": "Create a new event",
+      "GET api/events": "Get all events",
+      "GET api/events/:id": "Get an event by ID",
+      "PUT api/events/:id": "Update an event by ID",
+      "DELETE api/events/:id": "Delete an event by ID",
     },
   });
 });
 
-// Mount post routes at /posts
-app.use("/posts", postRoutes);
-
-// ============================================
-// SERVER
-// ============================================
+app.use("/events", eventRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📝 API Documentation: http://localhost:${PORT}`);
+  console.log(`API Documentation: http://localhost:${PORT}`);
 });
 
-// ============================================
-// GRACEFUL SHUTDOWN
-// ============================================
-
 process.on("SIGINT", async () => {
-  console.log("\n🛑 Shutting down gracefully...");
+  console.log("Shutting down...");
   await closeDB();
   process.exit(0);
 });
