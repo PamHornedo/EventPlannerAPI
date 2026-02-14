@@ -1,2 +1,4 @@
-// models/index.ts
-export { Event } from "./Event";
+import { Event } from "./Event";
+
+export { Event };
+export type { IEvent } from "./Event";

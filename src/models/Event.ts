@@ -1,6 +1,17 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-const eventSchema = new Schema(
+export interface IEvent extends Document {
+  title: string;
+  description?: string;
+  date: Date;
+  location?: string;
+  category: "Meeting" | "Conference" | "Personal" | "Workshop" | "Other";
+  attendees: string[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+const eventSchema = new Schema<IEvent>(
   {
     title: {
       type: String,
@@ -35,9 +46,8 @@ const eventSchema = new Schema(
   },
 );
 
-eventSchema.pre("save", function (next) {
+eventSchema.pre<IEvent>("save", function (next) {
   this.updatedAt = new Date();
-  next();
 });
 
-export default mongoose.model("Event", eventSchema);
+export const Event: Model<IEvent> = mongoose.model("Event", eventSchema);

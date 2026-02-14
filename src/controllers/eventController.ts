@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { Event } from "../models";
+import { Event, IEvent } from "../models";
+import mongoose from "mongoose";
 
 // Create new event
 export const createEvent = async (
@@ -47,18 +48,23 @@ export const getEventById = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  try {
-    const event = await Event.findById(req.params.id);
+  const { id } = req.params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Invalid event ID" });
+    return;
+  }
+
+  try {
+    const event = await Event.findById(id);
     if (!event) {
       res.status(404).json({ message: "Event not found" });
       return;
     }
-
     res.json({ event });
   } catch (err: any) {
     res
-      .status(400)
+      .status(500)
       .json({ message: "Error fetching event", error: err.message });
   }
 };
@@ -68,6 +74,12 @@ export const updateEvent = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Invalid event ID" });
+    return;
+  }
   try {
     const updatedEvent = await Event.findByIdAndUpdate(
       req.params.id,
@@ -96,6 +108,12 @@ export const deleteEvent = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    res.status(400).json({ message: "Invalid event ID" });
+    return;
+  }
   try {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);
 
