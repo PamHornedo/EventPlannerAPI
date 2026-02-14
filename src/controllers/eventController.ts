@@ -50,7 +50,7 @@ export const getEventById = async (
 ): Promise<void> => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
     res.status(400).json({ message: "Invalid event ID" });
     return;
   }
@@ -76,7 +76,7 @@ export const updateEvent = async (
 ): Promise<void> => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
     res.status(400).json({ message: "Invalid event ID" });
     return;
   }
@@ -110,7 +110,7 @@ export const deleteEvent = async (
 ): Promise<void> => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id as string)) {
     res.status(400).json({ message: "Invalid event ID" });
     return;
   }
